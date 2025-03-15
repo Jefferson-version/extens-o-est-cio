@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora</title>
+    <title>Calculadora de Troco</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,78 +21,72 @@
             box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
             text-align: center;
         }
-        .display {
+        .input-field {
             width: 100%;
-            height: 50px;
-            text-align: right;
-            font-size: 1.5em;
-            padding: 10px;
-            border: none;
-            background: #eee;
+            height: 40px;
+            font-size: 1.2em;
+            padding: 5px;
             margin-bottom: 10px;
             border-radius: 5px;
+            border: 1px solid #ccc;
+            text-align: center;
         }
         .buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            display: flex;
+            flex-direction: column;
             gap: 10px;
         }
         button {
             padding: 15px;
             font-size: 1.2em;
             border: none;
-            background: #ddd;
+            background: #28a745;
+            color: white;
             cursor: pointer;
             border-radius: 5px;
         }
         button:active {
-            background: #ccc;
+            background: #218838;
         }
-        .operator {
-            background: #f89c1c;
-            color: white;
-        }
-        .operator:active {
-            background: #e08b1a;
+        .result {
+            font-size: 1.5em;
+            margin-top: 10px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div class="calculator">
-        <input type="text" class="display" id="display" disabled>
+        <h2>Calculadora de Troco</h2>
+        <label>Quanto deu a conta?</label>
+        <input type="number" class="input-field" id="totalConta" placeholder="Digite o valor">
+        <label>Quanto o cliente pagou?</label>
+        <input type="number" class="input-field" id="valorPago" placeholder="Digite o valor">
         <div class="buttons">
-            <button onclick="clearDisplay()">C</button>
-            <button onclick="appendValue('/')" class="operator">/</button>
-            <button onclick="appendValue('*')" class="operator">*</button>
-            <button onclick="appendValue('-')" class="operator">-</button>
-            <button onclick="appendValue('7')">7</button>
-            <button onclick="appendValue('8')">8</button>
-            <button onclick="appendValue('9')">9</button>
-            <button onclick="appendValue('+')" class="operator">+</button>
-            <button onclick="appendValue('4')">4</button>
-            <button onclick="appendValue('5')">5</button>
-            <button onclick="appendValue('6')">6</button>
-            <button onclick="calculateResult()" class="operator">=</button>
-            <button onclick="appendValue('1')">1</button>
-            <button onclick="appendValue('2')">2</button>
-            <button onclick="appendValue('3')">3</button>
-            <button onclick="appendValue('0')">0</button>
-            <button onclick="appendValue('.')">.</button>
+            <button onclick="calcularTroco()">Calcular Troco</button>
         </div>
+        <div class="result" id="resultado"></div>
     </div>
 
     <script>
-        function appendValue(value) {
-            document.getElementById('display').value += value;
-        }
-        function clearDisplay() {
-            document.getElementById('display').value = '';
-        }
-        function calculateResult() {
-            try {
-                document.getElementById('display').value = eval(document.getElementById('display').value);
-            } catch {
-                alert('Erro na expressão!');
+        function calcularTroco() {
+            let totalConta = parseFloat(document.getElementById('totalConta').value);
+            let valorPago = parseFloat(document.getElementById('valorPago').value);
+            let resultado = document.getElementById('resultado');
+            
+            if (isNaN(totalConta) || isNaN(valorPago)) {
+                resultado.innerHTML = 'Por favor, insira valores válidos!';
+                return;
+            }
+            
+            let troco = valorPago - totalConta;
+            
+            if (troco < 0) {
+                resultado.innerHTML = `Falta R$ ${(troco * -1).toFixed(2)}`;
+            } else if (troco === 0) {
+                resultado.innerHTML = 'Pagamento exato! Sem troco.';
+            } else {
+                resultado.innerHTML = `Troco: R$ ${troco.toFixed(2)}`;
             }
         }
     </script>
